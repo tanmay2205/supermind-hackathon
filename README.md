@@ -2,6 +2,15 @@
 
 This project integrates **LangFlow** and **DataStax Astra DB** to process social media engagement data and generate actionable insights using **OpenAI GPT**. The application fetches social media engagement data from **DataStax Astra DB**, processes it, and leverages LangFlow to create dynamic prompts for GPT, which generates concise insights based on the data.
 
+---
+
+## Video Demonstration
+
+Watch the detailed video explanation of the project here:  
+[https://youtu.be/udCnRPkqc5M](https://youtu.be/udCnRPkqc5M)
+
+---
+
 ## Features:
 - Integration with **DataStax Astra DB** to retrieve and store social media engagement data.
 - Utilizes **LangFlow** for building dynamic workflows and generating GPT-powered insights.
