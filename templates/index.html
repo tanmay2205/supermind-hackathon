@@ -3,26 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChatGPT-like App</title>
+    <title>SocialPulse AI - Social Media Engagement Analyzer</title>
     <link rel="stylesheet" href="../static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    
-    <div id="chat-container">
-        <!-- Chat Header -->
-        <div id="chat-header">InsightFlow</div>
-
-        <!-- Messages Container -->
-        <div id="messages"></div>
-
-        <!-- User Input Section -->
-        <div id="input-container">
-            <input type="text" id="user-input" placeholder="Type your message...">
-            <br> <br>
-            <button id="send-button">Send</button>
+    <header>
+        <div class="logo">
+            
+            <h1>SocialPulse AI</h1>
         </div>
-    </div>
+        <p class="tagline">Decode Your Social Media Engagement with AI</p>
+    </header>
+
+    <main id="chat-container">
+        <div id="messages"></div>
+        
+        
+
+        <div id="input-container">
+            <input type="text" id="user-input" placeholder="Ask about your social media engagement...">
+            <button id="send-button">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </main>
+
+   
 
     <script src="../static/script.js"></script>
 </body>
 </html>
+
