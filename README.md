@@ -136,8 +136,7 @@ To deploy this project on **Render**:
 ## Live Deployment
 
 We have deployed the project on **Render**. You can view and interact with it directly at the following link:
-
-
+https://supermind-hackathon-znzs.onrender.com/
 
 ---
 
