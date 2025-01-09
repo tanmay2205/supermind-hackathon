@@ -1,38 +1,55 @@
-
 const messagesDiv = document.getElementById("messages");
 const userInput = document.getElementById("user-input");
 const sendButton = document.getElementById("send-button");
+const chart = document.querySelector(".chart");
 
-const sendMessage = async () => {
+function createMessageElement(content, isUser) {
+    const messageDiv = document.createElement("div");
+    messageDiv.classList.add("message", isUser ? "user-message" : "bot-message");
+    messageDiv.textContent = content;
+    return messageDiv;
+}
+
+function scrollToBottom() {
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+function updateChart(data) {
+    const bars = chart.querySelectorAll(".bar");
+    const colors = ['#6c35de', '#a364ff', '#ffc7ff', '#cb80ff', '#373737'];
+    bars.forEach((bar, index) => {
+        const height = data[index] + "%";
+        bar.style.height = height;
+        bar.style.backgroundColor = colors[index % colors.length];
+    });
+}
+
+function animateLoadingDots(loadingMessage) {
+    let dots = 0;
+    return setInterval(() => {
+        dots = (dots + 1) % 4;
+        loadingMessage.textContent = "Analyzing your request" + ".".repeat(dots);
+    }, 300);
+}
+
+async function sendMessage() {
     const userMessage = userInput.value.trim();
     if (!userMessage) return;
 
     // Display user message
-    const userDiv = document.createElement("div");
-    const userBold = document.createElement("strong");
-    userBold.textContent = "You:";
-    userDiv.appendChild(userBold);
-    const userMessageDiv = document.createElement("div");
-    userMessageDiv.textContent = userMessage;
-    userDiv.appendChild(userMessageDiv);
-    messagesDiv.appendChild(userDiv);
+    messagesDiv.appendChild(createMessageElement(userMessage, true));
+    scrollToBottom();
 
-    // Display loading message for bot
-    const loadingDiv = document.createElement("div");
-    const botBold = document.createElement("strong");
-    botBold.textContent = "Bot:";
-    loadingDiv.appendChild(botBold);
-    const loadingMessageDiv = document.createElement("div");
-    loadingMessageDiv.textContent = "...";
-    loadingDiv.appendChild(loadingMessageDiv);
-    loadingDiv.classList.add("loading");
-    messagesDiv.appendChild(loadingDiv);
-
-    // Clear the input field
+    // Clear input field
     userInput.value = "";
 
-    // Scroll to the bottom
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    // Display loading message
+    const loadingMessage = createMessageElement("Analyzing your request...", false);
+    messagesDiv.appendChild(loadingMessage);
+    scrollToBottom();
+
+    // Start loading animation
+    const loadingAnimation = animateLoadingDots(loadingMessage);
 
     try {
         // Send to backend
@@ -44,29 +61,47 @@ const sendMessage = async () => {
 
         const data = await response.json();
 
-        // Ensure the response from the backend contains the correct structure
+        // Remove loading message
+        messagesDiv.removeChild(loadingMessage);
+
+        // Display bot response
         if (data.reply) {
-            // Replace loading message with bot response
-            loadingMessageDiv.textContent = data.reply;
+            messagesDiv.appendChild(createMessageElement(data.reply, false));
+            
+            // Update chart with mock data
+            const mockData = [60, 80, 40, 90, 70];
+            updateChart(mockData);
         } else {
-            loadingMessageDiv.textContent = "Sorry, something went wrong!";
+            messagesDiv.appendChild(createMessageElement("Sorry, I couldn't analyze that. Could you try rephrasing?", false));
         }
     } catch (error) {
-        loadingMessageDiv.textContent = "Error connecting to server!";
+        // Remove loading message
+        messagesDiv.removeChild(loadingMessage);
+
+        messagesDiv.appendChild(createMessageElement("Error connecting to the analysis server. Please try again later.", false));
         console.error("Error:", error);
     }
 
-    // Scroll to the bottom again in case the new message pushed it out of view
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
-};
+    // Stop loading animation
+    clearInterval(loadingAnimation);
 
-// Send message on "Send" button click
+    scrollToBottom();
+}
+
+// Send message on button click
 sendButton.addEventListener("click", sendMessage);
 
-// Send message on "Enter" key press
+// Send message on Enter key press
 userInput.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
-        event.preventDefault();  // Prevent form submission if inside a form
+        event.preventDefault();
         sendMessage();
     }
 });
+
+// Add welcome message
+window.addEventListener("load", () => {
+    messagesDiv.appendChild(createMessageElement("Welcome to SocialPulse AI! How can I help you analyze your social media engagement today?", false));
+});
+
+
